@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/malyshevin/sso/internal/app"
 	"github.com/malyshevin/sso/internal/config"
 	"github.com/malyshevin/sso/internal/lib/logger/handlers/slogpretty"
 	"log/slog"
@@ -15,16 +15,15 @@ const (
 )
 
 func main() {
-	// TODO: config
 	cfg := config.MustLoad()
-	fmt.Println(cfg)
 
-	// TODO: logger
 	log := setupLogger(cfg.Env)
 	log.Info("logger initialized", slog.String("env", cfg.Env))
-	log.Debug("debug mode enabled", slog.Any("config", cfg))
+	log.Debug("debug mode enabled")
 
 	// TODO: init app
+	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
+	application.GRPCServer.MustRun()
 
 	// TODO: start gRPC server
 }
