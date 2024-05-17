@@ -15,8 +15,8 @@ type Config struct {
 }
 
 type GRPCConfig struct {
-	Port    int    `yaml:"port" env-required:"true"`
-	Timeout string `yaml:"timeout" env-required:"true"`
+	Port    int           `yaml:"port" env-required:"true"`
+	Timeout time.Duration `yaml:"timeout" env-required:"true"`
 }
 
 func MustLoad() *Config {
@@ -25,6 +25,10 @@ func MustLoad() *Config {
 		panic("CONFIG_PATH not specified")
 	}
 
+	return MustLoadByPath(path)
+}
+
+func MustLoadByPath(path string) *Config {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		panic("config file does not exist: " + path)
 	}
